@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دوئل ترم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --ink:#0b1220;
+  --panel:#111a2c;
+  --panel-2:#0d1524;
+  --line:rgba(148,197,253,.12);
+  --text:#eaf2ff;
+  --muted:#8ea1c2;
+  --p1:#37e2ff;
+  --p1-soft:rgba(55,226,255,.18);
+  --p2:#ff4fa6;
+  --p2-soft:rgba(255,79,166,.18);
+  --xp:#6bffb8;
+  --danger:#ff5470;
+  --radius:16px;
+  --radius-sm:12px;
+  --font-fa:'Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+  --font-num:'Space Grotesk','Vazirmatn',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#0b1220;--panel:#111a2c;--panel-2:#0d1524;--text:#eaf2ff;--muted:#8ea1c2;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#0b1220;--panel:#111a2c;--panel-2:#0d1524;--text:#eaf2ff;--muted:#8ea1c2;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:var(--font-fa);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:34px 34px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%);
+  mask-image:radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%);
+  opacity:.7;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(420px 260px at 12% 0%, var(--p1-soft), transparent 60%),
+    radial-gradient(420px 260px at 88% 8%, var(--p2-soft), transparent 60%);
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;}
+input,textarea{font:inherit;color:inherit;}
+:focus-visible{outline:2px solid var(--p1);outline-offset:2px;}
+.num,.ltr-num{font-family:var(--font-num);direction:ltr;unicode-bidi:isolate;display:inline-block;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+}
+
+.pcb{clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);}
+
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:16px 16px 110px;}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 4px 18px;gap:10px;}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:19px;white-space:nowrap;}
+.meta{text-align:center;font-size:11px;color:var(--muted);line-height:1.7;}
+.syncdot{font-size:10px;margin-top:2px;cursor:pointer;}
+.syncdot.ok{color:var(--xp);}
+.syncdot.busy{color:var(--muted);}
+.syncdot.err{color:var(--danger);}
+.iconBtn{background:var(--panel);border:1px solid var(--line);color:var(--text);width:38px;height:38px;border-radius:10px;font-size:16px;flex:none;}
+.iconBtn:active{transform:scale(.92);}
+
+.special-banner{background:linear-gradient(90deg,var(--panel),var(--panel-2));border:1px dashed var(--xp);border-radius:12px;padding:10px 14px;font-size:12.5px;text-align:center;margin-bottom:14px;line-height:1.8;}
+.special-banner b{color:var(--xp);}
+.special-banner .sb-icon{display:inline-block;animation:sbPulse 1.8s ease-in-out infinite;}
+@keyframes sbPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+
+.hero{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);padding:22px 20px 18px;position:relative;overflow:hidden;margin-bottom:16px;animation:heroIn .6s cubic-bezier(.2,.8,.2,1);}
+@keyframes heroIn{from{opacity:0;transform:translateY(10px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+.hero-head{text-align:center;margin-bottom:16px;}
+.hero-headline{font-size:16px;font-weight:600;line-height:1.8;}
+.accent-p1{color:var(--p1);font-weight:800;}
+.accent-p2{color:var(--p2);font-weight:800;}
+
+.duelbar{position:relative;height:14px;margin-bottom:14px;}
+.duelbar.thin{height:10px;margin-bottom:0;}
+.duelbar-track{display:flex;height:100%;border-radius:7px;overflow:hidden;border:1px solid var(--line);background:var(--panel-2);}
+.seg{height:100%;transition:width .6s cubic-bezier(.2,.8,.2,1);}
+.seg-p1{background:linear-gradient(90deg,var(--p1),#8af4ff);}
+.seg-p2{background:linear-gradient(90deg,#ffb3de,var(--p2));}
+.boundary{position:absolute;top:50%;inset-inline-start:calc(var(--split,50) * 1%);width:12px;height:12px;margin-top:-6px;margin-inline-start:-6px;border-radius:50%;background:#fff;box-shadow:0 0 14px 4px rgba(255,255,255,.85);transition:inset-inline-start .6s cubic-bezier(.2,.8,.2,1);animation:sparkPulse 1.6s ease-in-out infinite;}
+@keyframes sparkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.35);}}
+
+.duel-foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:8px;}
+.duel-foot .side{display:flex;align-items:center;gap:6px;}
+.duel-foot .name{font-weight:700;}
+.duel-foot .lvl{color:var(--muted);font-size:12px;}
+.xp-foot{margin-top:10px;}
+.xp-foot .xplabel{font-size:11px;color:var(--muted);}
+.xp-foot .xp{font-weight:800;font-size:18px;}
+
+.players-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.player-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);padding:16px 10px 14px;text-align:center;border-top:3px solid var(--accent);}
+.player-card.p1{--accent:var(--p1);}
+.player-card.p2{--accent:var(--p2);}
+.ring-wrap{width:84px;height:84px;margin:0 auto 8px;position:relative;}
+.ring-wrap svg{width:84px;height:84px;}
+.ring-bg,.ring-fg{fill:none;stroke-width:7;}
+.ring-bg{stroke:var(--line);}
+.ring-fg{stroke-linecap:round;transform-origin:42px 42px;transform:rotate(-90deg);transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1);}
+.ring-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:22px;}
+.pname{font-weight:800;font-size:14px;margin-top:2px;}
+.prank{font-size:11px;color:var(--muted);margin-top:2px;}
+.pstreak{font-size:12px;margin-top:8px;line-height:1.6;}
+.flame{filter:drop-shadow(0 0 5px rgba(255,111,60,.7));}
+.ptoday{font-size:11px;color:var(--muted);margin-top:6px;}
+
+.today-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;}
+.section-title{font-size:14px;font-weight:700;margin:22px 4px 10px;}
+.section-title.small{margin:0 0 10px;font-size:12px;color:var(--muted);text-align:center;font-weight:600;}
+.today-line{margin-top:9px;font-size:12px;color:var(--muted);text-align:center;}
+
+.tasks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media(min-width:560px){.tasks-grid{grid-template-columns:repeat(4,1fr);}}
+.task-card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--tcolor);border-radius:var(--radius-sm);padding:12px;transition:transform .15s;text-align:right;}
+.task-card:active{transform:scale(.96);}
+.task-card.special{box-shadow:0 0 0 1px var(--tcolor),0 0 16px 1px var(--tcolor);}
+.thead{display:flex;align-items:center;justify-content:space-between;}
+.task-card .ticon{font-size:21px;}
+.xtag{font-size:9.5px;font-weight:800;background:var(--tcolor);color:#04121c;padding:2px 6px;border-radius:999px;}
+.task-card .ttitle{font-size:12.5px;font-weight:700;margin:6px 0 2px;line-height:1.4;}
+.task-card .tgoal{font-size:10.5px;color:var(--muted);margin-bottom:8px;}
+.mbar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden;margin-bottom:4px;}
+.mbar i{display:block;height:100%;border-radius:3px;transition:width .5s;}
+.mbar.p1 i{background:var(--p1);}
+.mbar.p2 i{background:var(--p2);}
+.ttotal{font-size:10px;color:var(--muted);margin-top:6px;}
+.dotc{display:inline-block;width:6px;height:6px;border-radius:50%;margin:0 3px;}
+.dotc.p1{background:var(--p1);}
+.dotc.p2{background:var(--p2);}
+
+.badges-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.badge-owner{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;}
+.badge-list{display:flex;flex-wrap:wrap;gap:6px;}
+.badge-chip{font-size:10.5px;padding:5px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel);white-space:nowrap;}
+.badge-chip.locked{opacity:.35;filter:grayscale(1);}
+.badge-chip.unlocked.p1{border-color:var(--p1);color:var(--p1);}
+.badge-chip.unlocked.p2{border-color:var(--p2);color:var(--p2);}
+
+.feed{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 14px;}
+.feed-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line);}
+.feed-item:last-child{border-bottom:none;}
+.feed-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;}
+.feed-body{flex:1;min-width:0;}
+.feed-text{font-size:12.5px;line-height:1.8;}
+.feed-note{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.6;word-break:break-word;}
+.feed-time{font-size:10.5px;color:var(--muted);margin-top:1px;}
+.feed-del{flex:none;font-size:13px;color:var(--muted);padding:4px 6px;border-radius:8px;}
+.feed-del:active{background:var(--panel-2);}
+.feed-del.armed{color:var(--danger);font-weight:700;font-size:10.5px;white-space:nowrap;}
+.empty{font-size:12.5px;color:var(--muted);text-align:center;padding:26px 10px;line-height:1.9;}
+
+.fab-bar{position:fixed;left:0;right:0;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(180deg, transparent, var(--ink) 35%);z-index:20;}
+.fab{width:100%;max-width:728px;margin:0 auto;display:block;background:linear-gradient(90deg,var(--p1),var(--p2));color:#04121c;font-weight:800;font-size:15px;padding:14px;border-radius:13px;box-shadow:0 8px 26px rgba(0,0,0,.45);}
+.fab:active{transform:scale(.98);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(3,7,15,.72);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal-sheet{background:var(--panel);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:18px;max-height:88vh;overflow-y:auto;transform:translateY(16px);transition:transform .25s;}
+.modal-overlay.open .modal-sheet{transform:translateY(0);}
+.modal-head{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:15px;margin-bottom:14px;}
+.closeX{font-size:22px;line-height:1;color:var(--muted);padding:4px;}
+
+.ob-overlay{align-items:center;}
+.ob-sheet{border-radius:18px;text-align:center;transform:none;}
+.ob-emoji{font-size:44px;}
+.ob-title{font-size:24px;font-weight:800;margin:8px 0 4px;}
+.ob-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.9;}
+
+.row-label{font-size:12px;color:var(--muted);margin:4px 0 8px;font-weight:700;}
+.text-input{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);padding:11px 12px;border-radius:10px;margin-bottom:9px;font-size:13px;}
+.text-input::placeholder{color:var(--muted);}
+
+.pill-row{display:flex;gap:8px;margin-bottom:14px;}
+.pill{flex:1;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-weight:700;font-size:13px;text-align:center;transition:.15s;}
+.pill.p1.active{border-color:var(--p1);color:var(--p1);box-shadow:0 0 0 1px var(--p1) inset;}
+.pill.p2.active{border-color:var(--p2);color:var(--p2);box-shadow:0 0 0 1px var(--p2) inset;}
+
+.pill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.tpill{display:flex;align-items:center;gap:6px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-size:12px;text-align:right;}
+.tpill span{font-size:15px;}
+.tpill.active{border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset;color:var(--c);}
+
+.chip-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.chip{padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:var(--panel-2);font-weight:700;font-size:13px;}
+.chip.active{background:var(--xp);color:#04120c;border-color:var(--xp);}
+
+.primary-btn{width:100%;background:linear-gradient(90deg,var(--p1),var(--p2));color:#04121c;font-weight:800;padding:13px;border-radius:11px;margin-top:6px;font-size:14px;}
+.primary-btn:disabled{opacity:.4;}
+.secondary-btn{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);padding:11px;border-radius:11px;font-weight:700;margin-top:8px;font-size:13px;}
+.danger-btn{width:100%;background:rgba(255,84,112,.12);border:1px solid var(--danger);color:var(--danger);padding:11px;border-radius:11px;font-weight:700;}
+
+.settings-block{margin-bottom:20px;padding-bottom:18px;border-bottom:1px dashed var(--line);}
+.settings-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.goal-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px;}
+.goal-row input{width:64px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 0;}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.8;margin:0 0 8px;}
+
+.lvl-emoji{font-size:50px;text-align:center;}
+.lvl-title{font-size:22px;font-weight:800;text-align:center;margin:6px 0 4px;background:linear-gradient(90deg,var(--p1),var(--xp),var(--p2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.lvl-sub{text-align:center;font-size:13.5px;color:var(--muted);margin-bottom:18px;line-height:1.8;}
+
+.toasts{position:fixed;top:14px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:300;pointer-events:none;padding:0 16px;}
+.toast{background:var(--panel);border:1px solid var(--line);padding:10px 16px;border-radius:10px;font-size:12.5px;box-shadow:0 6px 20px rgba(0,0,0,.45);animation:toastIn .25s ease, toastOut .25s ease 3.2s forwards;max-width:92vw;text-align:center;}
+@keyframes toastIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px);}}
+
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:200;}
+
+.gbadge{font-size:12px;margin-inline-end:3px;filter:drop-shadow(0 0 3px rgba(0,0,0,.25));}
+
+.rivalry-badge{display:none;text-align:center;font-size:12.5px;font-weight:700;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:9px 14px;margin-bottom:14px;line-height:1.8;animation:rbPulse 1.8s ease-in-out infinite;}
+@keyframes rbPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}50%{box-shadow:0 0 14px 1px rgba(255,255,255,.12);}}
+
+.weekly-chart{display:flex;justify-content:space-between;align-items:flex-end;gap:6px;padding-top:6px;height:112px;}
+.wk-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.wk-bars{display:flex;align-items:flex-end;gap:3px;height:90px;}
+.wk-bar{width:9px;border-radius:4px 4px 2px 2px;transition:height .5s cubic-bezier(.2,.8,.2,1);}
+.wk-bar.p1{background:linear-gradient(180deg,#8af4ff,var(--p1));}
+.wk-bar.p2{background:linear-gradient(180deg,#ffb3de,var(--p2));}
+.wk-label{font-size:10px;color:var(--muted);margin-top:6px;}
+.wk-total{font-size:9px;color:var(--muted);margin-top:9px;}
+
+.today-line.leader{margin-top:4px;font-weight:700;}
+.today-line.leader .accent-p1{color:var(--p1);}
+.today-line.leader .accent-p2{color:var(--p2);}
+
+.streak-tag{font-size:10.5px;margin-top:5px;font-weight:700;}
+.streak-tag.p1{color:var(--p1);}
+.streak-tag.p2{color:var(--p2);}
+
+.sb-chip{display:inline-block;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin:4px 2px 0;font-size:11.5px;font-weight:700;}
+.sb-chip b{font-weight:800;}
+
+.sch-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px;}
+.sch-day{padding:9px 0;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);font-size:11px;font-weight:700;text-align:center;line-height:1.5;}
+.sch-day .sch-n{display:block;font-size:9.5px;color:var(--muted);font-weight:600;margin-top:2px;}
+.sch-day.active{border-color:var(--xp);color:var(--xp);box-shadow:0 0 0 1px var(--xp) inset;}
+.sch-day.active .sch-n{color:var(--xp);}
+.sch-day.istoday{border-style:dashed;}
+.sch-actions{display:flex;gap:8px;}
+.sch-actions button{flex:1;margin-top:0;}
+.tpill .tcheck{margin-inline-start:auto;font-size:13px;color:var(--muted);}
+.tpill.active .tcheck{color:inherit;}
+.clr-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;}
+.clr-dot{width:26px;height:26px;border-radius:50%;background:var(--dot);box-shadow:0 0 0 2px transparent;flex:none;}
+.clr-dot.active{box-shadow:0 0 0 2px #fff;}
+
+.sch-tasklist{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
+.sch-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);}
+.sch-row.on{border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset;}
+.sch-row .sr-name{flex:1;display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;text-align:right;min-width:0;}
+.sch-row .sr-name span{font-size:15px;flex:none;}
+.sch-row .sr-goal{width:56px;text-align:center;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 2px;font-size:12.5px;flex:none;}
+.sch-row .sr-unit{font-size:10.5px;color:var(--muted);flex:none;}
+.sch-row .sr-default{font-size:10.5px;color:var(--muted);flex:none;white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay ob-overlay open" id="onboarding">
+  <div class="modal-sheet ob-sheet pcb">
+    <div class="ob-emoji">🏆</div>
+    <div class="ob-title">دوئل ترم</div>
+    <div class="ob-sub">دو رقیب، هشت مأموریت، یک ترم.<br>اسم خودت و اسم حریفت رو بنویس تا شروع کنیم.</div>
+    <input id="obName1" class="text-input" placeholder="اسم نفر اول" maxlength="20">
+    <input id="obName2" class="text-input" placeholder="اسم نفر دوم" maxlength="20">
+    <button id="startBtn" class="primary-btn">بزن بریم 🚀</button>
+    <button id="obSyncLink" class="secondary-btn">دوستت قبلاً شروع کرده؟ اتصال به گیت‌هاب</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">🏆 <span>دوئل ترم</span></div>
+    <div class="meta">
+      <div id="dateToday" class="ltr-num"></div>
+      <div id="dayCount"></div>
+      <div id="syncDot" class="syncdot" style="display:none"></div>
+    </div>
+    <button id="settingsBtn" class="iconBtn" aria-label="تنظیمات">⚙️</button>
+  </header>
+
+  <div class="special-banner" id="specialBanner"></div>
+  <div class="rivalry-badge" id="rivalryBadge"></div>
+
+  <section class="hero pcb">
+    <div class="hero-head"><div id="heroHeadline" class="hero-headline"></div></div>
+    <div class="duelbar" id="duelBar">
+      <div class="duelbar-track">
+        <div class="seg seg-p1" id="segP1" style="width:50%"></div>
+        <div class="seg seg-p2" id="segP2" style="width:50%"></div>
+      </div>
+      <div class="boundary"></div>
+    </div>
+    <div class="duel-foot">
+      <div class="side"><span class="name" id="heroNameP1"></span><span class="lvl num" id="heroLvlP1"></span></div>
+      <div class="side"><span class="name" id="heroNameP2"></span><span class="lvl num" id="heroLvlP2"></span></div>
+    </div>
+    <div class="duel-foot xp-foot">
+      <div class="side"><span class="xplabel">امتیاز</span><span class="xp num" id="heroXpP1">0</span></div>
+      <div class="side"><span class="xplabel">امتیاز</span><span class="xp num" id="heroXpP2">0</span></div>
+    </div>
+  </section>
+
+  <section class="players-row">
+    <div class="player-card p1" id="card-p1">
+      <div class="ring-wrap"></div>
+      <div class="pname"></div>
+      <div class="prank"></div>
+      <div class="pstreak"></div>
+      <div class="ptoday"></div>
+    </div>
+    <div class="player-card p2" id="card-p2">
+      <div class="ring-wrap"></div>
+      <div class="pname"></div>
+      <div class="prank"></div>
+      <div class="pstreak"></div>
+      <div class="ptoday"></div>
+    </div>
+  </section>
+
+  <section class="today-card">
+    <div class="section-title small">امروز کی بیشتر کار کرده؟</div>
+    <div class="duelbar thin">
+      <div class="duelbar-track">
+        <div class="seg seg-p1" id="todayBarP1" style="width:50%"></div>
+        <div class="seg seg-p2" id="todayBarP2" style="width:50%"></div>
+      </div>
+    </div>
+    <div class="today-line" id="todayLine"></div>
+  </section>
+
+  <section class="today-card">
+    <div class="section-title small">هفتهٔ اخیر 📊</div>
+    <div class="weekly-chart" id="weeklyChart"></div>
+  </section>
+
+  <div class="section-title">مأموریت‌های ترم</div>
+  <section class="tasks-grid" id="tasksGrid"></section>
+
+  <div class="section-title">نشان‌ها</div>
+  <section class="badges-cols">
+    <div>
+      <div class="badge-owner"><span id="badgeNameP1"></span></div>
+      <div class="badge-list" id="badges-p1"></div>
+    </div>
+    <div>
+      <div class="badge-owner"><span id="badgeNameP2"></span></div>
+      <div class="badge-list" id="badges-p2"></div>
+    </div>
+  </section>
+
+  <div class="section-title">فعالیت‌های اخیر</div>
+  <section class="feed" id="feedList"></section>
+</div>
+
+<div class="fab-bar"><button id="logFab" class="fab">＋ ثبت پیشرفت</button></div>
+
+<div class="modal-overlay" id="logModal">
+  <div class="modal-sheet">
+    <div class="modal-head"><span>ثبت پیشرفت</span><button class="closeX" data-close="logModal">×</button></div>
+    <div id="logModalBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-sheet">
+    <div class="modal-head"><span>تنظیمات</span><button class="closeX" data-close="settingsModal">×</button></div>
+    <div id="settingsModalBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="levelUpModal">
+  <div class="modal-sheet pcb" style="text-align:center;">
+    <div id="levelUpBody"></div>
+    <button class="primary-btn" data-close="levelUpModal">باشه، ادامه بده 🚀</button>
+  </div>
+</div>
+
+<div id="toasts" class="toasts"></div>
+<canvas id="confettiCanvas"></canvas>
+
+<script>
+(function(){
+'use strict';
+
+var STORAGE_KEY='termDuelState_v2';
+var ACTIVE_KEY='termDuelActivePlayer';
+
+var BASE_TASKS=[
+  {id:'sport',title:'ورزش',emoji:'🏋️',color:'#ff6b6b',goal:30},
+  {id:'code',title:'برنامه‌نویسی',emoji:'💻',color:'#6c8cff',goal:60},
+  {id:'english',title:'زبان',emoji:'🗣️',color:'#4ade80',goal:20},
+  {id:'emag',title:'الکترومغناطیس',emoji:'⚡',color:'#c084fc',goal:45},
+  {id:'elec1',title:'الکترونیک ۱',emoji:'🔌',color:'#eab308',goal:45},
+  {id:'circ2',title:'مدار ۲',emoji:'🔋',color:'#2dd4bf',goal:45},
+  {id:'econ',title:'اقتصاد/احتمال مهندسی',emoji:'📊',color:'#f472b6',goal:30},
+  {id:'math',title:'ریاضی مهندسی',emoji:'➗',color:'#818cf8',goal:45}
+];
+var TASK_COLORS=['#ff6b6b','#6c8cff','#4ade80','#c084fc','#eab308','#2dd4bf','#f472b6','#818cf8','#fb923c','#38bdf8','#a3e635','#f43f5e'];
+
+// هفته از شنبه شروع می‌شه — i همون مقدار Date.getDay() هست
+var WEEK_DAYS=[
+  {i:6,name:'شنبه',short:'ش'},
+  {i:0,name:'یکشنبه',short:'۱ش'},
+  {i:1,name:'دوشنبه',short:'۲ش'},
+  {i:2,name:'سه‌شنبه',short:'۳ش'},
+  {i:3,name:'چهارشنبه',short:'۴ش'},
+  {i:4,name:'پنجشنبه',short:'۵ش'},
+  {i:5,name:'جمعه',short:'ج'}
+];
+var BONUS_MULT=2;
+var SUPER_MULT=3;
+
+var BADGES=[
+  {id:'first',emoji:'🥇',title:'قدم اول',cond:function(s){return s.totalEvents>=1;}},
+  {id:'streak3',emoji:'🔥',title:'سه‌روزه',cond:function(s){return s.streak>=3;}},
+  {id:'streak7',emoji:'🔥🔥',title:'هفت‌روزه',cond:function(s){return s.streak>=7;}},
+  {id:'streak14',emoji:'🔥🔥🔥',title:'دو هفته آتیش',cond:function(s){return s.streak>=14;}},
+  {id:'streak30',emoji:'🌟',title:'یک ماه پیوسته',cond:function(s){return s.streak>=30;}},
+  {id:'xp1000',emoji:'💎',title:'هزار امتیازی',cond:function(s){return s.xp>=1000;}},
+  {id:'xp5000',emoji:'💠',title:'پنج‌هزاری',cond:function(s){return s.xp>=5000;}},
+  {id:'allTasks',emoji:'🧩',title:'همه‌فن‌حریف',cond:function(s){return allTasks().every(function(t){return (s.perTask[t.id]&&s.perTask[t.id].total>0);});}},
+  {id:'deep',emoji:'📚',title:'غرق در یه درس',cond:function(s){return Object.keys(s.perTask).some(function(k){return s.perTask[k].total>=300;});}},
+  {id:'century',emoji:'⏱️',title:'صد ساعتی',cond:function(s){return s.totalMinutes>=6000;}}
+];
+
+function $(sel){return document.querySelector(sel);}
+function $all(sel){return document.querySelectorAll(sel);}
+function uid(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():('id-'+Date.now()+'-'+Math.random().toString(16).slice(2));}
+function escapeHtml(str){return String(str).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
+function todayDate(){return new Date();}
+function fmtDateKey(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day;}
+function addDays(d,n){var nd=new Date(d);nd.setDate(nd.getDate()+n);return nd;}
+function fmtHM(min){min=Math.round(min);var h=Math.floor(min/60),m=min%60;if(h<=0)return m+' دقیقه';if(m===0)return h+' ساعت';return h+' ساعت '+m+' دقیقه';}
+function relTime(ts){
+  var diff=Date.now()-ts,s=Math.floor(diff/1000);
+  if(s<60)return 'چند لحظه پیش';
+  var m=Math.floor(s/60);if(m<60)return m+' دقیقه پیش';
+  var h=Math.floor(m/60);if(h<24)return h+' ساعت پیش';
+  var d=Math.floor(h/24);if(d<30)return d+' روز پیش';
+  try{return todayDate().toLocaleDateString('fa-IR');}catch(e){return fmtDateKey(new Date(ts));}
+}
+function headerDate(){
+  try{return todayDate().toLocaleDateString('fa-IR',{weekday:'long',day:'numeric',month:'long'});}
+  catch(e){return fmtDateKey(todayDate());}
+}
+
+function emptySchedule(){var o={};for(var i=0;i<7;i++){o[i]={};}return o;}
+function normalizeSchedule(raw,existsFn,defaultGoalFn){
+  existsFn=existsFn||function(id){return !!taskDef(id);};
+  defaultGoalFn=defaultGoalFn||function(id){var d=taskDef(id);return d?d.goal:30;};
+  var out=emptySchedule();
+  if(!raw||typeof raw!=='object')return out;
+  for(var i=0;i<7;i++){
+    var dayRaw=(raw[i]!==undefined)?raw[i]:raw[String(i)];
+    if(!dayRaw)continue;
+    if(Array.isArray(dayRaw)){
+      // فرمت قدیمی: فقط لیست آیدی‌ها بدون عدد هدف مجزا — با هدف پیش‌فرض همون درس مهاجرت می‌کنیم
+      dayRaw.forEach(function(id){
+        if(existsFn(id))out[i][id]=defaultGoalFn(id);
+      });
+    }else if(typeof dayRaw==='object'){
+      Object.keys(dayRaw).forEach(function(id){
+        if(!existsFn(id))return;
+        var g=parseInt(dayRaw[id],10);
+        if(isNaN(g)||g<0)g=0;
+        out[i][id]=Math.max(0,Math.min(600,g));
+      });
+    }
+  }
+  return out;
+}
+
+function sanitizeCustomTask(raw){
+  if(!raw||typeof raw!=='object')return null;
+  var id=String(raw.id||'').trim();
+  if(!/^custom_/.test(id))return null; // custom_ prefix keeps ids from ever colliding with the 8 base tasks
+  var title=String(raw.title||'').trim().slice(0,24);
+  if(!title)return null;
+  var emoji=String(raw.emoji||'⭐').trim().slice(0,4)||'⭐';
+  var color=String(raw.color||TASK_COLORS[0]).trim();
+  if(!/^#[0-9a-fA-F]{6}$/.test(color))color=TASK_COLORS[0];
+  var goal=parseInt(raw.goal,10);
+  if(!(goal>0))goal=30;
+  goal=Math.max(5,Math.min(300,goal));
+  return {id:id,title:title,emoji:emoji,color:color,goal:goal,createdAt:Number(raw.createdAt)||Date.now()};
+}
+function normalizeCustomTasks(raw){
+  var out=[],seen={};
+  if(Array.isArray(raw)){
+    raw.forEach(function(r){
+      var t=sanitizeCustomTask(r);
+      if(t&&!seen[t.id]){out.push(t);seen[t.id]=true;}
+    });
+  }
+  return out;
+}
+function allTasks(){return BASE_TASKS.concat((typeof state!=='undefined'&&state&&state.customTasks)?state.customTasks:[]);}
+
+function defaultState(){
+  return {
+    setupDone:false,
+    startedAt:Date.now(),
+    players:{p1:{name:'بازیکن ۱',updatedAt:0},p2:{name:'بازیکن ۲',updatedAt:0}},
+    events:[],
+    deletedEvents:{},
+    schedule:emptySchedule(),
+    scheduleUpdatedAt:0,
+    customTasks:[],
+    deletedCustomTasks:{}
+  };
+}
+function loadState(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return defaultState();
+    var parsed=JSON.parse(raw);
+    if(!parsed||!parsed.players||!parsed.events)return defaultState();
+    ['p1','p2'].forEach(function(pid){
+      if(!parsed.players[pid])parsed.players[pid]={name:pid==='p1'?'بازیکن ۱':'بازیکن ۲',updatedAt:0};
+      if(!parsed.players[pid].updatedAt)parsed.players[pid].updatedAt=parsed.configUpdatedAt||0;
+    });
+    if(!parsed.deletedEvents)parsed.deletedEvents={};
+    parsed.customTasks=normalizeCustomTasks(parsed.customTasks);
+    if(!parsed.deletedCustomTasks)parsed.deletedCustomTasks={};
+    (function(){
+      // during initial load the global `state` var isn't assigned yet, so allTasks()/taskDef()
+      // can't see parsed.customTasks — build the valid-id/default-goal map explicitly for this call
+      var idGoal={};
+      BASE_TASKS.forEach(function(t){idGoal[t.id]=t.goal;});
+      parsed.customTasks.forEach(function(t){idGoal[t.id]=t.goal;});
+      parsed.schedule=normalizeSchedule(parsed.schedule,
+        function(id){return Object.prototype.hasOwnProperty.call(idGoal,id);},
+        function(id){return idGoal[id];});
+    })();
+    if(!parsed.scheduleUpdatedAt)parsed.scheduleUpdatedAt=0;
+    delete parsed.configUpdatedAt;
+    delete parsed.tasks;
+    return parsed;
+  }catch(e){return defaultState();}
+}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+
+var GH_KEY='termDuelGhCfg';
+function loadGhCfg(){
+  try{
+    var raw=localStorage.getItem(GH_KEY);
+    if(!raw)return null;
+    var c=JSON.parse(raw);
+    if(!c||!c.owner||!c.repo||!c.token)return null;
+    if(!c.path)c.path='duel-data.json';
+    return c;
+  }catch(e){return null;}
+}
+function saveGhCfg(cfg){try{localStorage.setItem(GH_KEY,JSON.stringify(cfg));}catch(e){}}
+function clearGhCfg(){try{localStorage.removeItem(GH_KEY);}catch(e){}}
+
+var state=loadState();
+var activePlayer=(function(){try{return localStorage.getItem(ACTIVE_KEY)||'p1';}catch(e){return 'p1';}})();
+
+function taskDef(id){var list=allTasks();for(var i=0;i<list.length;i++){if(list[i].id===id)return list[i];}return null;}
+function scheduleGoalFor(taskId,dateKey){
+  var day=dayIndexOfKey(dateKey);
+  var dayMap=(state.schedule&&state.schedule[day])||{};
+  return Object.prototype.hasOwnProperty.call(dayMap,taskId)?dayMap[taskId]:null;
+}
+function taskGoal(id,dateKey){
+  if(dateKey){
+    var ov=scheduleGoalFor(id,dateKey);
+    if(ov!==null)return ov;
+  }
+  var d=taskDef(id);return d?d.goal:30;
+}
+function genderEmoji(pid){return pid==='p1'?'💙':'💗';}
+function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
+function dayCount(){return Math.max(1,Math.floor((Date.now()-state.startedAt)/86400000)+1);}
+function dayIndexOfKey(dateKey){
+  var p=dateKey.split('-');
+  return new Date(Number(p[0]),Number(p[1])-1,Number(p[2])).getDay();
+}
+function scheduledIdsForDay(dayIdx){
+  var dayMap=(state.schedule&&state.schedule[dayIdx])||{};
+  return Object.keys(dayMap).filter(function(id){return !!taskDef(id);});
+}
+function scheduledIdsForDate(dateKey){return scheduledIdsForDay(dayIndexOfKey(dateKey));}
+function isScheduled(taskId,dateKey){
+  var day=dayIndexOfKey(dateKey);
+  var dayMap=(state.schedule&&state.schedule[day])||{};
+  return Object.prototype.hasOwnProperty.call(dayMap,taskId);
+}
+function todaysScheduledIds(){return scheduledIdsForDate(fmtDateKey(todayDate()));}
+function scheduleIsEmpty(){
+  for(var i=0;i<7;i++){if(scheduledIdsForDay(i).length)return false;}
+  return true;
+}
+function dayName(dayIdx){
+  for(var i=0;i<WEEK_DAYS.length;i++){if(WEEK_DAYS[i].i===dayIdx)return WEEK_DAYS[i].name;}
+  return '';
+}
+function superTaskForDate(dateKey){
+  // ماموریت شانسی فقط از بین چیزهایی که همون روز توی برنامه (×2) هستن انتخاب می‌شه
+  var pool=scheduledIdsForDate(dateKey);
+  if(!pool.length)return null;
+  var sum=0;
+  for(var i=0;i<dateKey.length;i++){sum+=dateKey.charCodeAt(i);}
+  return taskDef(pool[sum%pool.length]);
+}
+function todaysSuperTaskId(){var t=superTaskForDate(fmtDateKey(todayDate()));return t?t.id:null;}
+function taskMultiplier(taskId,dateKey){
+  var m=1;
+  if(isScheduled(taskId,dateKey))m=Math.max(m,BONUS_MULT);
+  var st=superTaskForDate(dateKey);
+  if(st&&st.id===taskId)m=Math.max(m,SUPER_MULT);
+  return m;
+}
+
+var XP_SCALE=100; // بزرگ‌تر یعنی رسیدن به هر سطح سخت‌تر و طولانی‌تر (قبلاً ۵۰ بود)
+function levelFromXp(xp){return Math.floor(Math.sqrt(Math.max(0,xp)/XP_SCALE))+1;}
+function xpFloor(level){return XP_SCALE*(level-1)*(level-1);}
+function xpCeil(level){return XP_SCALE*level*level;}
+function rankTitle(level){
+  if(level>=15)return {t:'افسانه',e:'👑'};
+  if(level>=11)return {t:'استاد',e:'🧠'};
+  if(level>=8)return {t:'قهرمان',e:'🏆'};
+  if(level>=5)return {t:'مبارز',e:'⚔️'};
+  if(level>=3)return {t:'کوشا',e:'🌱'};
+  return {t:'تازه‌کار',e:'🐣'};
+}
+
+function computeStatsFor(playerId){
+  var todayKey=fmtDateKey(todayDate());
+  var yKey=fmtDateKey(addDays(todayDate(),-1));
+  var evs=state.events.filter(function(e){return e.player===playerId;}).sort(function(a,b){return a.ts-b.ts;});
+  var xp=0,totalMinutes=0,todayMinutes=0,todayXp=0;
+  var perTask={};
+  var dayCum={};
+  var activeDates={};
+  allTasks().forEach(function(t){perTask[t.id]={total:0,today:0};});
+  evs.forEach(function(e){
+    var d=new Date(e.ts),dk=fmtDateKey(d);
+    activeDates[dk]=true;
+    var goal=taskGoal(e.taskId,dk);
+    var key=e.taskId+'|'+dk;
+    var before=dayCum[key]||0;
+    var after=before+e.minutes;
+    dayCum[key]=after;
+    var mult=taskMultiplier(e.taskId,dk);
+    var gain=e.minutes*2*mult;
+    if(before<goal&&after>=goal)gain+=15*mult;
+    xp+=gain;totalMinutes+=e.minutes;
+    if(!perTask[e.taskId])perTask[e.taskId]={total:0,today:0};
+    perTask[e.taskId].total+=e.minutes;
+    if(dk===todayKey){perTask[e.taskId].today+=e.minutes;todayMinutes+=e.minutes;todayXp+=gain;}
+  });
+  var streak=0;
+  var cursor=activeDates[todayKey]?todayDate():(activeDates[yKey]?addDays(todayDate(),-1):null);
+  if(cursor){while(activeDates[fmtDateKey(cursor)]){streak++;cursor=addDays(cursor,-1);}}
+  var level=levelFromXp(xp);
+  var floor=xpFloor(level),ceil=xpCeil(level);
+  var progress=ceil>floor?(xp-floor)/(ceil-floor):1;
+  var rank=rankTitle(level);
+  var s={playerId:playerId,xp:xp,level:level,progress:progress,rank:rank,streak:streak,totalMinutes:totalMinutes,todayMinutes:todayMinutes,todayXp:todayXp,perTask:perTask,totalEvents:evs.length,loggedToday:!!activeDates[todayKey]};
+  s.badges=BADGES.map(function(b){return {id:b.id,emoji:b.emoji,title:b.title,unlocked:!!b.cond(s)};});
+  return s;
+}
+function computeAll(){return {p1:computeStatsFor('p1'),p2:computeStatsFor('p2')};}
+
+function b64EncodeUtf8(str){return btoa(unescape(encodeURIComponent(str)));}
+function b64DecodeUtf8(b64){return decodeURIComponent(escape(atob(b64.replace(/\n/g,''))));}
+
+function ghApiUrl(cfg){
+  var pathParts=cfg.path.split('/').map(encodeURIComponent).join('/');
+  return 'https://api.github.com/repos/'+encodeURIComponent(cfg.owner)+'/'+encodeURIComponent(cfg.repo)+'/contents/'+pathParts;
+}
+function ghFetchRemote(cfg){
+  return fetch(ghApiUrl(cfg),{headers:{'Authorization':'token '+cfg.token,'Accept':'application/vnd.github+json'}}).then(function(res){
+    if(res.status===404)return {exists:false,sha:null,data:null};
+    if(!res.ok)return res.json().catch(function(){return {};}).then(function(b){var err=new Error('gh_'+res.status);err.status=res.status;err.body=b;throw err;});
+    return res.json().then(function(json){
+      var data=null;
+      try{data=JSON.parse(b64DecodeUtf8(json.content||''));}catch(e){data=null;}
+      return {exists:true,sha:json.sha,data:data};
+    });
+  });
+}
+function ghPushRemote(cfg,dataObj,sha){
+  var body={message:'به‌روزرسانی دوئل ترم',content:b64EncodeUtf8(JSON.stringify(dataObj))};
+  if(sha)body.sha=sha;
+  return fetch(ghApiUrl(cfg),{method:'PUT',headers:{'Authorization':'token '+cfg.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(res){
+    if(!res.ok)return res.json().catch(function(){return {};}).then(function(b){var err=new Error('gh_push_'+res.status);err.status=res.status;err.body=b;throw err;});
+    return res.json();
+  });
+}
+
+function exportableState(s){
+  return {
+    players:s.players,
+    startedAt:s.startedAt,
+    events:s.events.slice().sort(function(a,b){return a.id<b.id?-1:(a.id>b.id?1:0);}),
+    deletedEvents:s.deletedEvents||{},
+    schedule:normalizeSchedule(s.schedule),
+    scheduleUpdatedAt:s.scheduleUpdatedAt||0,
+    customTasks:normalizeCustomTasks(s.customTasks),
+    deletedCustomTasks:s.deletedCustomTasks||{}
+  };
+}
+function mergeRemoteIntoLocal(remoteData){
+  if(!remoteData)return;
+  state.setupDone=true;
+
+  // 1) merge deletion tombstones first (union) so deletions are never resurrected
+  var mergedDeleted={};
+  Object.keys(state.deletedEvents||{}).forEach(function(id){mergedDeleted[id]=state.deletedEvents[id];});
+  Object.keys(remoteData.deletedEvents||{}).forEach(function(id){
+    var rts=remoteData.deletedEvents[id];
+    if(!mergedDeleted[id]||rts>mergedDeleted[id])mergedDeleted[id]=rts;
+  });
+  state.deletedEvents=mergedDeleted;
+
+  // 2) union events, skipping anything tombstoned anywhere
+  var localIds={};
+  state.events.forEach(function(e){localIds[e.id]=true;});
+  (remoteData.events||[]).forEach(function(e){
+    if(e&&e.id&&!localIds[e.id]&&!mergedDeleted[e.id]){state.events.push(e);localIds[e.id]=true;}
+  });
+  state.events=state.events.filter(function(e){return !mergedDeleted[e.id];});
+
+  // 3) per-field last-write-wins for each player's name, so an edit to one
+  //    name never stomps a fresher edit to the other name
+  if(remoteData.players){
+    ['p1','p2'].forEach(function(pid){
+      var rp=remoteData.players[pid],lp=state.players[pid];
+      if(rp&&(rp.updatedAt||0)>(lp.updatedAt||0)){
+        state.players[pid]={name:rp.name,updatedAt:rp.updatedAt||0};
+      }
+    });
+  }
+
+  // 3.5) custom tasks are additive and shared: union by id, tombstones stop a
+  //      deleted one from coming back from the other device
+  var mergedDelTasks={};
+  Object.keys(state.deletedCustomTasks||{}).forEach(function(id){mergedDelTasks[id]=state.deletedCustomTasks[id];});
+  Object.keys(remoteData.deletedCustomTasks||{}).forEach(function(id){
+    var rts=remoteData.deletedCustomTasks[id];
+    if(!mergedDelTasks[id]||rts>mergedDelTasks[id])mergedDelTasks[id]=rts;
+  });
+  state.deletedCustomTasks=mergedDelTasks;
+
+  var localTaskIds={};
+  (state.customTasks||[]).forEach(function(t){localTaskIds[t.id]=true;});
+  (remoteData.customTasks||[]).forEach(function(raw){
+    var t=sanitizeCustomTask(raw);
+    if(t&&!localTaskIds[t.id]&&!mergedDelTasks[t.id]){state.customTasks.push(t);localTaskIds[t.id]=true;}
+  });
+  state.customTasks=(state.customTasks||[]).filter(function(t){return !mergedDelTasks[t.id];});
+
+  // 3.6) weekly schedule is shared — newest edit wins for the whole plan.
+  // customTasks was just merged above, so re-validating below already sees the
+  // union and drops any id pointing at a task deleted on the other device.
+  if((remoteData.scheduleUpdatedAt||0)>(state.scheduleUpdatedAt||0)){
+    state.schedule=remoteData.schedule;
+    state.scheduleUpdatedAt=remoteData.scheduleUpdatedAt||0;
+  }
+  state.schedule=normalizeSchedule(state.schedule);
+
+  // 4) earliest start date wins (keeps "day count" consistent across devices)
+  if(remoteData.startedAt&&remoteData.startedAt<state.startedAt)state.startedAt=remoteData.startedAt;
+}
+
+function setSyncStatus(kind,err){
+  var el=$('#syncDot');
+  if(!el)return;
+  if(kind==='none'){el.style.display='none';el.textContent='';return;}
+  el.style.display='block';
+  if(kind==='busy'){el.textContent='⏳ همگام‌سازی...';el.className='syncdot busy';}
+  else if(kind==='ok'){el.textContent='🟢 همگام با گیت‌هاب';el.className='syncdot ok';}
+  else if(kind==='error'){
+    var msg='🔴 خطا در اتصال';
+    if(err&&err.status===401)msg='🔴 توکن نامعتبره';
+    if(err&&err.status===404)msg='🔴 مخزن/مسیر پیدا نشد';
+    if(err&&err.status===403)msg='🔴 محدودیت درخواست، بعداً';
+    el.textContent=msg;el.className='syncdot err';
+  }
+}
+
+var syncBusy=false;
+var syncPending=false;
+function syncDone(){
+  syncBusy=false;
+  if(syncPending){syncPending=false;setTimeout(syncNow,80);}
+}
+function syncNow(){
+  var cfg=loadGhCfg();
+  if(!cfg)return;
+  if(syncBusy){syncPending=true;return;} // never drop a request silently — retry once the current sync finishes
+  syncBusy=true;
+  setSyncStatus('busy');
+  ghFetchRemote(cfg).then(function(remote){
+    var remoteData=remote.exists?remote.data:null;
+    mergeRemoteIntoLocal(remoteData);
+    saveState();
+    renderAll();
+    var localExport=exportableState(state);
+    var same=remote.exists&&remoteData&&JSON.stringify(exportableState(remoteData))===JSON.stringify(localExport);
+    if(same){syncDone();setSyncStatus('ok');return;}
+    return ghPushRemote(cfg,localExport,remote.sha).then(function(){syncDone();setSyncStatus('ok');}).catch(function(err){
+      syncDone();
+      if(err.status===409||err.status===422){setTimeout(syncNow,600);return;}
+      setSyncStatus('error',err);
+    });
+  }).catch(function(err){syncDone();setSyncStatus('error',err);});
+}
+
+var syncDebounce=null;
+function scheduleSync(){
+  var cfg=loadGhCfg();
+  if(!cfg)return;
+  if(syncDebounce)clearTimeout(syncDebounce);
+  syncDebounce=setTimeout(syncNow,900);
+}
+
+var pollHandle=null;
+function startPolling(){
+  stopPolling();
+  var cfg=loadGhCfg();
+  if(!cfg)return;
+  pollHandle=setInterval(function(){if(!document.hidden)syncNow();},25000);
+}
+function stopPolling(){if(pollHandle){clearInterval(pollHandle);pollHandle=null;}}
+document.addEventListener('visibilitychange',function(){if(!document.hidden){var cfg=loadGhCfg();if(cfg)syncNow();}});
+
+function animateNumber(el,from,to,dur){
+  dur=dur||700;
+  if(!el)return;
+  from=Number(from)||0;to=Number(to)||0;
+  if(from===to){el.textContent=to;return;}
+  var start=performance.now();
+  function tick(now){
+    var p=Math.min(1,(now-start)/dur);
+    var val=Math.round(from+(to-from)*p);
+    el.textContent=val;
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function showModal(id){document.getElementById(id).classList.add('open');}
+function hideModal(id){document.getElementById(id).classList.remove('open');}
+function showToast(msg){
+  var el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=msg;
+  $('#toasts').appendChild(el);
+  setTimeout(function(){el.remove();},3600);
+}
+
+function leaderInfo(stats){
+  var a=stats.p1.xp,b=stats.p2.xp;
+  var total=Math.max(1,a+b);
+  var p1pct=a/total*100;
+  var n1='<span class="accent-p1">'+escapeHtml(state.players.p1.name)+'</span>';
+  var n2='<span class="accent-p2">'+escapeHtml(state.players.p2.name)+'</span>';
+  var diff=Math.abs(a-b);
+  var headline;
+  if(a===0&&b===0)headline='هنوز شروع نشده — اولین ثبت رو بزن و دوئل رو راه بنداز 🚀';
+  else if(diff===0)headline='🔥 مساوی‌مساوی! رقابت خیلی داغه';
+  else if(diff<40)headline='نزدیک‌ترین دوئل ممکنه — فقط <b class="num">'+diff+'</b> امتیاز فاصله‌ست';
+  else headline=(a>b?n1:n2)+' با <b class="num">'+diff+'</b> امتیاز جلوعه ⚡';
+  return {p1pct:p1pct,headline:headline};
+}
+
+function ringSvg(pct,colorVar,levelNum){
+  var r=36,c=2*Math.PI*r;
+  var offset=c*(1-Math.max(0,Math.min(1,pct)));
+  return '<svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="'+r+'" class="ring-bg"/><circle cx="42" cy="42" r="'+r+'" class="ring-fg" style="stroke:'+colorVar+'" stroke-dasharray="'+c+'" stroke-dashoffset="'+offset+'"/></svg><div class="ring-label num">'+levelNum+'</div>';
+}
+
+function renderHeader(){
+  $('#dateToday').textContent=headerDate();
+  $('#dayCount').textContent='روز '+dayCount()+' دوئل';
+}
+
+function renderSpecial(){
+  var el=$('#specialBanner');
+  var ids=todaysScheduledIds();
+  var today=dayName(todayDate().getDay());
+  var parts=[];
+  if(scheduleIsEmpty()){
+    parts.push('<span class="sb-icon">🗓</span> هنوز برنامهٔ هفتگی نچیدی — از <b>⚙️ تنظیمات</b> برای هر روز درس‌هاتو مشخص کن تا <span class="num">×'+BONUS_MULT+'</span> امتیاز بگیرن.');
+  }else if(ids.length===0){
+    parts.push('<span class="sb-icon">🗓</span> برای <b>'+today+'</b> چیزی توی برنامه نذاشتی — هر کاری بکنی امتیاز عادی می‌گیره.');
+  }else{
+    parts.push('<span class="sb-icon">🎯</span> برنامهٔ <b>'+today+'</b> — این‌ها <span class="num">×'+BONUS_MULT+'</span> امتیاز می‌دن:<br>'+
+      ids.map(function(id){var t=taskDef(id);return '<span class="sb-chip">'+t.emoji+' <b>'+t.title+'</b></span>';}).join(''));
+  }
+  var superT=taskDef(todaysSuperTaskId());
+  if(superT){
+    parts.push('<div style="margin-top:8px">🎲 ماموریت شانسی امروز: <span class="sb-chip" style="border-color:var(--xp);color:var(--xp)">'+superT.emoji+' <b>'+superT.title+'</b></span> امروز <span class="num">×'+SUPER_MULT+'</span> امتیاز می‌ده!</div>');
+  }
+  el.innerHTML=parts.join('');
+}
+
+function renderHero(stats){
+  var info=leaderInfo(stats);
+  $('#heroHeadline').innerHTML=info.headline;
+  $('#segP1').style.width=info.p1pct+'%';
+  $('#segP2').style.width=(100-info.p1pct)+'%';
+  $('#duelBar').style.setProperty('--split',info.p1pct.toFixed(2));
+  var xpEl1=$('#heroXpP1'),xpEl2=$('#heroXpP2');
+  animateNumber(xpEl1,xpEl1.dataset.val||0,stats.p1.xp);
+  animateNumber(xpEl2,xpEl2.dataset.val||0,stats.p2.xp);
+  xpEl1.dataset.val=stats.p1.xp;xpEl2.dataset.val=stats.p2.xp;
+  $('#heroNameP1').innerHTML='<span class="gbadge">💙</span>'+escapeHtml(state.players.p1.name);
+  $('#heroNameP2').innerHTML='<span class="gbadge">💗</span>'+escapeHtml(state.players.p2.name);
+  $('#heroLvlP1').textContent='سطح '+stats.p1.level;
+  $('#heroLvlP2').textContent='سطح '+stats.p2.level;
+}
+
+function renderPlayers(stats){
+  ['p1','p2'].forEach(function(pid){
+    var s=stats[pid];
+    var card=$('#card-'+pid);
+    card.querySelector('.ring-wrap').innerHTML=ringSvg(s.progress,'var(--'+pid+')',s.level);
+    card.querySelector('.pname').innerHTML='<span class="gbadge">'+genderEmoji(pid)+'</span>'+escapeHtml(state.players[pid].name);
+    card.querySelector('.prank').textContent=s.rank.e+' '+s.rank.t;
+    card.querySelector('.pstreak').innerHTML=s.streak>0?('<span class="flame">🔥</span> <span class="num">'+s.streak+'</span> روز پیاپی'+(s.loggedToday?'':' (امروز ثبت کن تا نره!)')):'هنوز استریکی نداره — شروع کن!';
+    card.querySelector('.ptoday').textContent='امروز: '+fmtHM(s.todayMinutes)+' · '+s.todayXp+'+ امتیاز';
+  });
+}
+
+function renderToday(stats){
+  var a=stats.p1.todayMinutes,b=stats.p2.todayMinutes,tot=Math.max(1,a+b);
+  $('#todayBarP1').style.width=(a/tot*100)+'%';
+  $('#todayBarP2').style.width=(b/tot*100)+'%';
+  var line=escapeHtml(state.players.p1.name)+': <span class="num">'+fmtHM(a)+'</span> &nbsp;·&nbsp; '+escapeHtml(state.players.p2.name)+': <span class="num">'+fmtHM(b)+'</span>';
+  if(a!==b&&(a>0||b>0)){
+    var leadPid=a>b?'p1':'p2',diff=Math.abs(a-b);
+    line+='<div class="today-line leader">⚡ <span class="accent-'+leadPid+'">'+escapeHtml(state.players[leadPid].name)+'</span> امروز <span class="num">'+diff+'</span> دقیقه جلوعه</div>';
+  }
+  $('#todayLine').innerHTML=line;
+}
+
+function dayTotalsFor(playerId,dateKey){
+  var sum=0;
+  state.events.forEach(function(e){
+    if(e.player===playerId&&fmtDateKey(new Date(e.ts))===dateKey)sum+=e.minutes;
+  });
+  return sum;
+}
+
+function renderWeekly(){
+  var days=[];
+  for(var i=6;i>=0;i--){
+    var d=addDays(todayDate(),-i),dk=fmtDateKey(d);
+    days.push({label:d.toLocaleDateString('fa-IR',{weekday:'short'}),a:dayTotalsFor('p1',dk),b:dayTotalsFor('p2',dk)});
+  }
+  var max=1;
+  days.forEach(function(x){max=Math.max(max,x.a,x.b);});
+  $('#weeklyChart').innerHTML=days.map(function(x){
+    var ha=x.a>0?Math.max(4,Math.round(x.a/max*80)):2;
+    var hb=x.b>0?Math.max(4,Math.round(x.b/max*80)):2;
+    return '<div class="wk-col"><div class="wk-bars">'+
+      '<i class="wk-bar p1" style="height:'+ha+'px" title="'+escapeHtml(state.players.p1.name)+': '+fmtHM(x.a)+'"></i>'+
+      '<i class="wk-bar p2" style="height:'+hb+'px" title="'+escapeHtml(state.players.p2.name)+': '+fmtHM(x.b)+'"></i>'+
+      '</div><span class="wk-label">'+x.label+'</span></div>';
+  }).join('');
+}
+
+function winStreakInfo(){
+  var d=todayDate(),winner=null,count=0;
+  for(var i=0;i<90;i++){
+    var dk=fmtDateKey(d);
+    var a=dayTotalsFor('p1',dk),b=dayTotalsFor('p2',dk);
+    if(a===0&&b===0){d=addDays(d,-1);continue;}
+    if(a===b)break;
+    var dayWinner=a>b?'p1':'p2';
+    if(winner===null){winner=dayWinner;count=1;}
+    else if(dayWinner===winner)count++;
+    else break;
+    d=addDays(d,-1);
+  }
+  return {winner:winner,count:count};
+}
+
+function renderRivalry(){
+  var el=$('#rivalryBadge');
+  var info=winStreakInfo();
+  if(info.winner&&info.count>=2){
+    el.style.display='block';
+    el.innerHTML=genderEmoji(info.winner)+' <span class="accent-'+info.winner+'">'+escapeHtml(state.players[info.winner].name)+'</span> <span class="num">'+info.count+'</span> روزه پشت‌سرهم داره می‌بره! 🔥😤';
+  }else{
+    el.style.display='none';el.innerHTML='';
+  }
+}
+
+function renderTasks(stats){
+  var grid=$('#tasksGrid');
+  var todayKey=fmtDateKey(todayDate());
+  grid.innerHTML=allTasks().map(function(t){
+    var g=taskGoal(t.id,todayKey);
+    var a=stats.p1.perTask[t.id]||{total:0,today:0};
+    var b=stats.p2.perTask[t.id]||{total:0,today:0};
+    var pa=g?Math.min(100,a.today/g*100):100;
+    var pb=g?Math.min(100,b.today/g*100):100;
+    var mult=taskMultiplier(t.id,todayKey);
+    var isSpecial=mult>1;
+    var goalLine=g>0?('هدف روزانه: <span class="num">'+g+'</span> دقیقه'):'امروز نیازی نیست';
+    return '<div class="task-card'+(isSpecial?' special':'')+'" style="--tcolor:'+t.color+'" data-open-task="'+t.id+'">'+
+      '<div class="thead"><div class="ticon">'+t.emoji+'</div>'+(isSpecial?'<span class="xtag">×'+mult+'</span>':'')+'</div>'+
+      '<div class="ttitle">'+t.title+'</div>'+
+      '<div class="tgoal">'+goalLine+'</div>'+
+      '<div class="mbar p1"><i style="width:'+pa+'%"></i></div>'+
+      '<div class="mbar p2"><i style="width:'+pb+'%"></i></div>'+
+      '<div class="ttotal"><span class="dotc p1"></span><span class="num">'+fmtHM(a.total)+'</span> <span class="dotc p2"></span><span class="num">'+fmtHM(b.total)+'</span></div>'+
+    '</div>';
+  }).join('');
+  $all('[data-open-task]').forEach(function(el){el.onclick=function(){openLogModal(el.dataset.openTask);};});
+}
+
+function renderBadges(stats){
+  $('#badgeNameP1').innerHTML='<span class="gbadge">💙</span>'+escapeHtml(state.players.p1.name);
+  $('#badgeNameP2').innerHTML='<span class="gbadge">💗</span>'+escapeHtml(state.players.p2.name);
+  ['p1','p2'].forEach(function(pid){
+    var wrap=$('#badges-'+pid);
+    wrap.innerHTML=stats[pid].badges.map(function(b){
+      return '<span class="badge-chip '+(b.unlocked?('unlocked '+pid):'locked')+'" title="'+escapeHtml(b.title)+'">'+b.emoji+' '+escapeHtml(b.title)+'</span>';
+    }).join('');
+  });
+}
+
+var armedDeleteId=null;
+
+function deleteEvent(id){
+  state.events=state.events.filter(function(e){return e.id!==id;});
+  if(!state.deletedEvents)state.deletedEvents={};
+  state.deletedEvents[id]=Date.now();
+  saveState();
+  scheduleSync();
+  renderAll();
+  vibrate(15);
+  showToast('فعالیت حذف شد 🗑');
+}
+
+function renderFeed(){
+  var list=state.events.slice().sort(function(a,b){return b.ts-a.ts;}).slice(0,15);
+  var feed=$('#feedList');
+  if(list.length===0){
+    feed.innerHTML='<div class="empty">هنوز فعالیتی ثبت نشده.<br>اولین قدم رو با دکمهٔ پایین صفحه بردار 👇</div>';
+    return;
+  }
+  feed.innerHTML=list.map(function(e){
+    var t=taskDef(e.taskId);
+    var pid=e.player;
+    var armed=armedDeleteId===e.id;
+    return '<div class="feed-item">'+
+      '<span class="feed-dot" style="background:var(--'+pid+')"></span>'+
+      '<div class="feed-body"><div class="feed-text"><b>'+escapeHtml(state.players[pid].name)+'</b> <span class="num">'+e.minutes+'</span> دقیقه '+(t?t.emoji+' '+t.title:'')+' زد</div>'+
+      (e.note?('<div class="feed-note">💬 '+escapeHtml(e.note)+'</div>'):'')+
+      '<div class="feed-time">'+relTime(e.ts)+'</div></div>'+
+      '<button class="feed-del'+(armed?' armed':'')+'" data-del="'+e.id+'">'+(armed?'مطمئنی؟':'🗑')+'</button>'+
+    '</div>';
+  }).join('');
+  $all('[data-del]').forEach(function(b){
+    b.onclick=function(){
+      var id=b.dataset.del;
+      if(armedDeleteId===id){deleteEvent(id);armedDeleteId=null;}
+      else{
+        armedDeleteId=id;
+        renderFeed();
+        setTimeout(function(){if(armedDeleteId===id){armedDeleteId=null;renderFeed();}},4000);
+      }
+    };
+  });
+}
+
+function renderAll(){
+  if(!state.setupDone){showModal('onboarding');return;}
+  hideModal('onboarding');
+  var stats=computeAll();
+  renderHeader();
+  renderSpecial();
+  renderHero(stats);
+  renderRivalry();
+  renderPlayers(stats);
+  renderToday(stats);
+  renderWeekly();
+  renderTasks(stats);
+  renderBadges(stats);
+  renderFeed();
+}
+
+var logDraft={player:activePlayer,taskId:allTasks()[0].id,minutes:null,note:''};
+
+function openLogModal(taskId){
+  logDraft={player:activePlayer,taskId:taskId||logDraft.taskId||allTasks()[0].id,minutes:null,note:''};
+  renderLogModal();
+  showModal('logModal');
+}
+
+function renderLogModal(){
+  var body=$('#logModalBody');
+  body.innerHTML=
+    '<div class="row-label">بازیکن</div>'+
+    '<div class="pill-row" id="playerPills">'+
+    ['p1','p2'].map(function(pid){return '<button class="pill '+pid+' '+(pid===logDraft.player?'active':'')+'" data-player="'+pid+'">'+genderEmoji(pid)+' '+escapeHtml(state.players[pid].name)+'</button>';}).join('')+
+    '</div>'+
+    '<div class="row-label">ماموریت</div>'+
+    '<div class="pill-grid" id="taskPills">'+
+    (function(){
+      var todayKey=fmtDateKey(todayDate());
+      return allTasks().map(function(t){
+        var mult=taskMultiplier(t.id,todayKey);
+        return '<button class="tpill '+(t.id===logDraft.taskId?'active':'')+'" data-task="'+t.id+'" style="--c:'+t.color+'"><span>'+t.emoji+'</span>'+t.title+(mult>1?'<span class="tcheck num">×'+mult+'</span>':'')+'</button>';
+      }).join('');
+    })()+
+    '</div>'+
+    '<div class="row-label">چند دقیقه؟</div>'+
+    '<div class="chip-row" id="minChips">'+
+    [15,30,45,60,90].map(function(m){return '<button class="chip '+(logDraft.minutes===m?'active':'')+'" data-min="'+m+'">'+m+'</button>';}).join('')+
+    '</div>'+
+    '<input type="number" id="customMin" class="text-input" placeholder="دقیقه دلخواه" min="1" max="600">'+
+    '<div class="row-label">توضیح (اختیاری)</div>'+
+    '<textarea id="noteInput" class="text-input" rows="2" maxlength="140" placeholder="مثلاً: فصل ۳ رو تموم کردم، یا امروز حسابی عرق ریختم 💪">'+escapeHtml(logDraft.note)+'</textarea>'+
+    '<button id="submitLogBtn" class="primary-btn" '+(!(logDraft.taskId&&logDraft.minutes>0)?'disabled':'')+'>ثبت کن 💥</button>';
+
+  $all('[data-player]').forEach(function(b){b.onclick=function(){
+    logDraft.player=b.dataset.player;activePlayer=logDraft.player;
+    try{localStorage.setItem(ACTIVE_KEY,activePlayer);}catch(e){}
+    renderLogModal();
+  };});
+  $all('[data-task]').forEach(function(b){b.onclick=function(){logDraft.taskId=b.dataset.task;renderLogModal();};});
+  $all('[data-min]').forEach(function(b){b.onclick=function(){logDraft.minutes=parseInt(b.dataset.min,10);renderLogModal();};});
+  $('#customMin').oninput=function(e){
+    var v=parseInt(e.target.value,10);
+    logDraft.minutes=(v>0?v:null);
+    $all('#minChips .chip').forEach(function(c){c.classList.remove('active');});
+    $('#submitLogBtn').disabled=!(logDraft.taskId&&logDraft.minutes>0);
+  };
+  $('#noteInput').oninput=function(e){logDraft.note=e.target.value;};
+  $('#submitLogBtn').onclick=submitLog;
+}
+
+function submitLog(){
+  if(!(logDraft.taskId&&logDraft.minutes>0))return;
+  var player=logDraft.player;
+  var before=computeStatsFor(player);
+  var beforeAll=computeAll();
+  var ev={id:uid(),player:player,taskId:logDraft.taskId,minutes:logDraft.minutes,ts:Date.now(),note:(logDraft.note||'').trim().slice(0,140)};
+  state.events.push(ev);
+  saveState();
+  scheduleSync();
+  var after=computeStatsFor(player);
+  var afterAll=computeAll();
+  hideModal('logModal');
+  renderAll();
+  vibrate(20);
+  var t=taskDef(ev.taskId);
+  showToast(escapeHtml(state.players[player].name)+' <span class="num">'+ev.minutes+'</span> دقیقه '+t.emoji+' '+t.title+' زد (+'+(after.xp-before.xp)+' امتیاز)');
+
+  (function(){
+    var otherId=player==='p1'?'p2':'p1';
+    var beforeOther=beforeAll[otherId].todayMinutes,beforeMe=beforeAll[player].todayMinutes;
+    var afterOther=afterAll[otherId].todayMinutes,afterMe=afterAll[player].todayMinutes;
+    var wasLeaderBefore=beforeMe===beforeOther?null:(beforeMe>beforeOther?player:otherId);
+    var leaderNow=afterMe===afterOther?null:(afterMe>afterOther?player:otherId);
+    if(leaderNow===player&&leaderNow!==wasLeaderBefore){
+      setTimeout(function(){showToast('⚡ '+escapeHtml(state.players[player].name)+' توی رقابت امروز جلو افتاد!');},700);
+    }
+  })();
+
+  var todayKeyForLog=fmtDateKey(new Date(ev.ts));
+  var goal=taskGoal(ev.taskId,todayKeyForLog);
+  var beforeToday=(before.perTask[ev.taskId]?before.perTask[ev.taskId].today:0);
+  var afterToday=(after.perTask[ev.taskId]?after.perTask[ev.taskId].today:0);
+  if(goal>0&&beforeToday<goal&&afterToday>=goal){
+    var bonusXp=15*taskMultiplier(ev.taskId,todayKeyForLog);
+    setTimeout(function(){showToast('🎯 هدف امروزِ «'+t.title+'» زده شد! +'+bonusXp+' امتیاز جایزه');},450);
+    confettiBurst(0.8);
+  }
+
+  if(after.level>before.level){
+    setTimeout(function(){showLevelUp(player,after);},500);
+  }else{
+    confettiBurst(0.45);
+  }
+
+  var leaderBefore=beforeAll.p1.xp===beforeAll.p2.xp?null:(beforeAll.p1.xp>beforeAll.p2.xp?'p1':'p2');
+  var leaderAfter=afterAll.p1.xp===afterAll.p2.xp?null:(afterAll.p1.xp>afterAll.p2.xp?'p1':'p2');
+  if(leaderAfter&&leaderAfter!==leaderBefore&&leaderBefore!==null){
+    setTimeout(function(){showToast('🚀 '+escapeHtml(state.players[leaderAfter].name)+' صدرنشین شد!');},900);
+  }
+
+  var newBadges=after.badges.filter(function(b){return b.unlocked;}).filter(function(b){
+    return !before.badges.filter(function(x){return x.id===b.id&&x.unlocked;}).length;
+  });
+  newBadges.forEach(function(b,i){
+    setTimeout(function(){showToast('🏅 نشان جدید برای '+escapeHtml(state.players[player].name)+': '+b.emoji+' '+b.title);},1200+i*450);
+  });
+}
+
+function showLevelUp(player,stats){
+  $('#levelUpBody').innerHTML=
+    '<div class="lvl-emoji">'+stats.rank.e+'</div>'+
+    '<div class="lvl-title">سطح جدید!</div>'+
+    '<div class="lvl-sub"><b>'+escapeHtml(state.players[player].name)+'</b> رسید به سطح <span class="num">'+stats.level+'</span> — '+stats.rank.t+'</div>';
+  showModal('levelUpModal');
+  confettiBurst(1.5);
+}
+
+var schEditDay=null;
+
+function commitSchedule(){
+  state.scheduleUpdatedAt=Date.now();
+  saveState();
+  scheduleSync();
+  renderAll();
+  renderScheduleEditor();
+}
+
+// برای تایپ‌کردن توی اینپوت عدد، فقط بخش‌های لازم رو آپدیت می‌کنیم و کل فرم رو
+// دوباره نمی‌سازیم — وگرنه فوکوس وسط تایپ از دست می‌ره
+function liveUpdateAfterGoalEdit(){
+  state.scheduleUpdatedAt=Date.now();
+  saveState();
+  scheduleSync();
+  renderAll();
+}
+
+function renderScheduleEditor(){
+  var daysEl=$('#schDays');
+  if(!daysEl)return;
+  var todayIdx=todayDate().getDay();
+  if(schEditDay===null)schEditDay=todayIdx;
+  daysEl.innerHTML=WEEK_DAYS.map(function(d){
+    var n=scheduledIdsForDay(d.i).length;
+    return '<button class="sch-day'+(d.i===schEditDay?' active':'')+(d.i===todayIdx?' istoday':'')+'" data-schday="'+d.i+'">'+d.short+
+      '<span class="sch-n num">'+n+'</span></button>';
+  }).join('');
+
+  var dayMap=state.schedule[schEditDay]||{};
+  $('#schTasks').innerHTML=allTasks().map(function(t){
+    var on=Object.prototype.hasOwnProperty.call(dayMap,t.id);
+    var val=on?dayMap[t.id]:t.goal;
+    return '<div class="sch-row'+(on?' on':'')+'" style="--c:'+t.color+'">'+
+      '<button class="sr-name" data-schtoggle="'+t.id+'"><span>'+t.emoji+'</span>'+t.title+'</button>'+
+      (on?
+        ('<input type="number" class="sr-goal" data-schgoal="'+t.id+'" min="0" max="600" value="'+val+'"><span class="sr-unit">دقیقه</span>'):
+        ('<span class="sr-default">پیش‌فرض <span class="num">'+t.goal+'</span> دقیقه</span>')
+      )+
+    '</div>';
+  }).join('');
+
+  var cur=scheduledIdsForDay(schEditDay);
+  $('#schSummary').innerHTML=cur.length?
+    ('<b>'+dayName(schEditDay)+'</b>: '+cur.map(function(id){var g=dayMap[id];return escapeHtml(taskDef(id).title)+(g===0?' (صفر)':'');}).join(' · ')):
+    ('<b>'+dayName(schEditDay)+'</b> فعلاً خالیه — هر کاری اون روز بزنی امتیاز عادی می‌گیره.');
+
+  $all('[data-schday]').forEach(function(b){
+    b.onclick=function(){schEditDay=parseInt(b.dataset.schday,10);renderScheduleEditor();};
+  });
+  $all('[data-schtoggle]').forEach(function(b){
+    b.onclick=function(){
+      var id=b.dataset.schtoggle;
+      var map=state.schedule[schEditDay]||(state.schedule[schEditDay]={});
+      if(Object.prototype.hasOwnProperty.call(map,id)){
+        delete map[id];
+      }else{
+        map[id]=taskDef(id).goal; // با هدف پیش‌فرض همون درس شروع می‌شه، بعد قابل تغییره
+      }
+      vibrate(10);
+      commitSchedule();
+    };
+  });
+  $all('[data-schgoal]').forEach(function(inp){
+    inp.oninput=function(e){
+      var id=e.target.dataset.schgoal;
+      var v=parseInt(e.target.value,10);
+      if(isNaN(v)||v<0)v=0;
+      if(v>600)v=600;
+      var map=state.schedule[schEditDay]||(state.schedule[schEditDay]={});
+      map[id]=v;
+      liveUpdateAfterGoalEdit(); // فوکوس اینپوت حفظ می‌شه چون اینجا فرم تنظیمات رو دوباره نمی‌سازیم
+    };
+    inp.onblur=function(){renderScheduleEditor();}; // بعد از اتمام ویرایش، نمایش رو یکدست کن
+  });
+  $('#schClearDay').onclick=function(){
+    state.schedule[schEditDay]={};
+    commitSchedule();
+    showToast('برنامهٔ '+dayName(schEditDay)+' خالی شد');
+  };
+  $('#schCopyDay').onclick=function(){
+    var src=state.schedule[schEditDay]||{};
+    var copy=Object.assign({},src);
+    for(var i=0;i<7;i++){state.schedule[i]=Object.assign({},copy);}
+    commitSchedule();
+    showToast('برنامهٔ '+dayName(schEditDay)+' روی همهٔ روزها کپی شد ✅');
+  };
+}
+
+var ctDraftColor=TASK_COLORS[0];
+
+function renderCustomTasksEditor(){
+  var listEl=$('#customTaskList');
+  if(!listEl)return;
+  listEl.innerHTML=(state.customTasks||[]).length?
+    state.customTasks.map(function(t){
+      return '<span class="badge-chip">'+t.emoji+' '+escapeHtml(t.title)+' <button data-delct="'+t.id+'" style="color:var(--danger);font-weight:800;margin-inline-start:4px">×</button></span>';
+    }).join(''):
+    '<span class="hint" style="margin:0">هنوز ماموریت دلخواهی اضافه نکردی.</span>';
+
+  $('#ctColors').innerHTML=TASK_COLORS.map(function(c){
+    return '<button class="clr-dot'+(c===ctDraftColor?' active':'')+'" style="--dot:'+c+'" data-clr="'+c+'"></button>';
+  }).join('');
+
+  $all('[data-clr]').forEach(function(b){
+    b.onclick=function(){ctDraftColor=b.dataset.clr;renderCustomTasksEditor();};
+  });
+  $all('[data-delct]').forEach(function(b){
+    b.onclick=function(){
+      var id=b.dataset.delct;
+      state.customTasks=(state.customTasks||[]).filter(function(t){return t.id!==id;});
+      if(!state.deletedCustomTasks)state.deletedCustomTasks={};
+      state.deletedCustomTasks[id]=Date.now();
+      for(var i=0;i<7;i++){state.schedule[i]=(state.schedule[i]||[]).filter(function(x){return x!==id;});}
+      saveState();scheduleSync();renderAll();renderSettings();
+      showToast('ماموریت حذف شد 🗑');
+    };
+  });
+  $('#ctAddBtn').onclick=function(){
+    var title=($('#ctTitle').value||'').trim().slice(0,24);
+    if(!title){showToast('یه اسم برای ماموریت بنویس ✍️');return;}
+    var emoji=($('#ctEmoji').value||'').trim().slice(0,4)||'⭐';
+    var goal=parseInt($('#ctGoal').value,10);
+    if(!(goal>0))goal=30;
+    goal=Math.max(5,Math.min(300,goal));
+    var t={id:'custom_'+uid(),title:title,emoji:emoji,color:ctDraftColor,goal:goal,createdAt:Date.now()};
+    if(!state.customTasks)state.customTasks=[];
+    state.customTasks.push(t);
+    saveState();scheduleSync();renderAll();
+    showToast(emoji+' «'+title+'» اضافه شد ✅');
+    ctDraftColor=TASK_COLORS[0];
+    renderSettings();
+  };
+}
+
+function renderSettings(){
+  var body=$('#settingsModalBody');
+  var gh=loadGhCfg()||{};
+  body.innerHTML=
+    '<div class="settings-block">'+
+      '<div class="row-label">اسم بازیکن‌ها</div>'+
+      '<input id="nameP1" class="text-input" value="'+escapeHtml(state.players.p1.name)+'" maxlength="20">'+
+      '<input id="nameP2" class="text-input" value="'+escapeHtml(state.players.p2.name)+'" maxlength="20">'+
+      '<button id="saveNamesBtn" class="secondary-btn">ذخیره اسم‌ها</button>'+
+    '</div>'+
+    '<div class="settings-block">'+
+      '<div class="row-label">مأموریت‌های دلخواه</div>'+
+      '<div class="hint">این ۸ تای اصلی رو نمیشه حذف کرد، ولی هر چقدر بخوای مأموریت جدید اضافه کن. مشترک بین هر دو نفره.</div>'+
+      '<div class="badge-list" id="customTaskList" style="margin-bottom:12px"></div>'+
+      '<input id="ctTitle" class="text-input" placeholder="اسم ماموریت (مثلاً: نقاشی)" maxlength="24">'+
+      '<div class="pill-row">'+
+        '<input id="ctEmoji" class="text-input" placeholder="ایموجی" maxlength="4" style="text-align:center">'+
+        '<input id="ctGoal" type="number" class="text-input" placeholder="هدف روزانه (دقیقه)" min="5" max="300" value="30">'+
+      '</div>'+
+      '<div class="row-label">رنگ</div>'+
+      '<div class="clr-row" id="ctColors"></div>'+
+      '<button id="ctAddBtn" class="secondary-btn">افزودن ماموریت ➕</button>'+
+    '</div>'+
+    '<div class="settings-block">'+
+      '<div class="row-label">برنامهٔ هفتگی (مشترک بین هر دو نفر)</div>'+
+      '<div class="hint">روز رو انتخاب کن، درس‌هایی که اون روز باید بخونید رو بزن، و کنارش هدف دقیقهٔ همون روز رو عوض کن — حتی می‌تونی بزاریش رو صفر که اون روز لازم نباشه. هر چی توی برنامهٔ اون روز باشه <span class="num">×'+BONUS_MULT+'</span> امتیاز می‌ده، و از بینشون یکی رندوم <span class="num">×'+SUPER_MULT+'</span> می‌شه. بقیهٔ درس‌ها (خارج از برنامه) امتیاز عادی می‌گیرن. تغییرات همون لحظه برای هر دو نفر ذخیره و همگام می‌شه.</div>'+
+      '<div class="sch-days" id="schDays"></div>'+
+      '<div class="sch-tasklist" id="schTasks"></div>'+
+      '<div class="sch-actions">'+
+        '<button id="schClearDay" class="secondary-btn">خالی کردن این روز</button>'+
+        '<button id="schCopyDay" class="secondary-btn">کپی به بقیهٔ روزها</button>'+
+      '</div>'+
+      '<div class="hint" id="schSummary"></div>'+
+    '</div>'+
+    '<div class="settings-block">'+
+      '<div class="row-label">همگام‌سازی خودکار با گیت‌هاب (رایگان)</div>'+
+      '<div class="hint">این حالت فقط وقتی کار می‌کنه که این فایل رو روی گیت‌هاب‌پیجز (یا هر هاست دیگه) منتشر کرده باشی — نه از همین لینک Claude. اگه هنوز راه‌ننداختیش، راهنمای کامل رو توی چت داری. هر دو نفر جدا جدا اینجا رو با توکن خودشون پر می‌کنن.</div>'+
+      '<input id="ghOwner" class="text-input" placeholder="یوزرنیم گیت‌هاب صاحب مخزن (owner)" value="'+escapeHtml(gh.owner||'')+'">'+
+      '<input id="ghRepo" class="text-input" placeholder="اسم مخزن (repo)" value="'+escapeHtml(gh.repo||'')+'">'+
+      '<input id="ghPath" class="text-input" placeholder="مسیر فایل دیتا (پیش‌فرض duel-data.json)" value="'+escapeHtml(gh.path||'duel-data.json')+'">'+
+      '<input id="ghToken" type="password" class="text-input" placeholder="'+(gh.token?'توکن ذخیره شده — برای تغییر بنویس':'توکن شخصی خودت (Personal Access Token)')+'">'+
+      '<button id="ghSaveBtn" class="secondary-btn">ذخیره و همگام‌سازی</button>'+
+      (gh.token?'<button id="ghClearBtn" class="secondary-btn">قطع همگام‌سازی گیت‌هاب</button>':'')+
+      '<div id="ghStatusMsg" class="hint"></div>'+
+    '</div>'+
+    '<div class="settings-block">'+
+      '<div class="row-label">بازنشانی کامل</div>'+
+      '<button id="resetBtn" class="danger-btn" data-armed="0">پاک کردن همهٔ داده‌ها</button>'+
+    '</div>';
+
+  renderCustomTasksEditor();
+  renderScheduleEditor();
+
+  $('#saveNamesBtn').onclick=function(){
+    var n1=$('#nameP1').value.trim()||'بازیکن ۱';
+    var n2=$('#nameP2').value.trim()||'بازیکن ۲';
+    var now=Date.now();
+    // only bump the timestamp of a name that actually changed, so an edit to
+    // one name can never accidentally stomp a fresher edit to the other name
+    if(n1!==state.players.p1.name)state.players.p1={name:n1,updatedAt:now};
+    if(n2!==state.players.p2.name)state.players.p2={name:n2,updatedAt:now};
+    saveState();scheduleSync();renderAll();showToast('اسم‌ها ذخیره شد ✅');
+  };
+  $('#ghSaveBtn').onclick=function(){
+    var newCfg={
+      owner:$('#ghOwner').value.trim(),
+      repo:$('#ghRepo').value.trim(),
+      path:($('#ghPath').value.trim()||'duel-data.json'),
+      token:$('#ghToken').value.trim()||gh.token||''
+    };
+    if(!newCfg.owner||!newCfg.repo||!newCfg.token){$('#ghStatusMsg').textContent='⚠️ owner، repo و توکن لازمه';return;}
+    saveGhCfg(newCfg);
+    $('#ghStatusMsg').textContent='در حال اتصال...';
+    startPolling();
+    syncNow();
+    showToast('تنظیمات گیت‌هاب ذخیره شد ✅');
+    setTimeout(renderSettings,600);
+  };
+  if($('#ghClearBtn')){
+    $('#ghClearBtn').onclick=function(){
+      clearGhCfg();stopPolling();setSyncStatus('none');
+      showToast('همگام‌سازی گیت‌هاب قطع شد');
+      renderSettings();
+    };
+  }
+  $('#resetBtn').onclick=function(){
+    var btn=$('#resetBtn');
+    if(btn.dataset.armed==='1'){
+      state=defaultState();state.scheduleUpdatedAt=Date.now();schEditDay=null;
+      saveState();scheduleSync();hideModal('settingsModal');renderAll();
+    }else{
+      btn.dataset.armed='1';
+      btn.textContent=loadGhCfg()?'مطمئنی؟ دیتای مشترک گیت‌هاب هم پاک میشه — دوباره بزن':'مطمئنی؟ دوباره بزن تا پاک بشه';
+      setTimeout(function(){btn.dataset.armed='0';btn.textContent='پاک کردن همهٔ داده‌ها';},4000);
+    }
+  };
+}
+
+var confettiCanvas=document.getElementById('confettiCanvas');
+var cctx=confettiCanvas.getContext('2d');
+function resizeCanvas(){confettiCanvas.width=innerWidth;confettiCanvas.height=innerHeight;}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+var particles=[];
+var confettiRunning=false;
+function confettiBurst(intensity){
+  intensity=intensity||1;
+  var colors=['#37e2ff','#ff4fa6','#6bffb8','#ffd166','#f472b6'];
+  var n=Math.round(70*intensity);
+  for(var i=0;i<n;i++){
+    particles.push({
+      x:confettiCanvas.width/2+(Math.random()-0.5)*160,
+      y:confettiCanvas.height*0.28,
+      vx:(Math.random()-0.5)*8,
+      vy:Math.random()*-6-4,
+      g:0.25+Math.random()*0.12,
+      size:4+Math.random()*4,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      life:0,maxLife:70+Math.random()*40,
+      rot:Math.random()*Math.PI,vr:(Math.random()-0.5)*0.3
+    });
+  }
+  if(!confettiRunning){confettiRunning=true;requestAnimationFrame(confettiTick);}
+}
+function confettiTick(){
+  cctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  particles.forEach(function(p){
+    p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life++;
+    cctx.save();cctx.translate(p.x,p.y);cctx.rotate(p.rot);
+    cctx.globalAlpha=Math.max(0,1-p.life/p.maxLife);
+    cctx.fillStyle=p.color;cctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+    cctx.restore();
+  });
+  particles=particles.filter(function(p){return p.life<p.maxLife&&p.y<confettiCanvas.height+50;});
+  if(particles.length>0){requestAnimationFrame(confettiTick);}
+  else{confettiRunning=false;cctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);}
+}
+
+function init(){
+  $('#startBtn').onclick=function(){
+    var n1=$('#obName1').value.trim()||'بازیکن ۱';
+    var n2=$('#obName2').value.trim()||'بازیکن ۲';
+    var now=Date.now();
+    state.players.p1={name:n1,updatedAt:now};
+    state.players.p2={name:n2,updatedAt:now};
+    state.setupDone=true;state.startedAt=Date.now();
+    saveState();renderAll();
+  };
+  $('#settingsBtn').onclick=function(){renderSettings();showModal('settingsModal');};
+  $('#logFab').onclick=function(){openLogModal();};
+  $all('[data-close]').forEach(function(b){b.onclick=function(){hideModal(b.dataset.close);};});
+  $all('.modal-overlay').forEach(function(overlay){
+    if(overlay.id==='onboarding')return;
+    overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.classList.remove('open');});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){$all('.modal-overlay.open').forEach(function(o){if(o.id!=='onboarding')o.classList.remove('open');});}
+  });
+  $('#syncDot').onclick=function(){syncNow();};
+  $('#obSyncLink').onclick=function(){renderSettings();showModal('settingsModal');};
+  renderAll();
+  if(loadGhCfg()){syncNow();startPolling();}
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+
+})();
+</script>
+</body>
+</html>
